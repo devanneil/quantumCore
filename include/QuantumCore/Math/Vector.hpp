@@ -45,17 +45,22 @@ public:
     T& operator[](size_t index);
     const T& operator[](size_t index) const;
 
-    Vector operator+(const Vector& rhs) const;
-    Vector operator-(const Vector& rhs) const;
-    Vector operator*(const Vector& rhs) const;
     template<typename U>
-    Vector operator*(U scalar) const;
-
-    Vector& operator+=(const Vector& rhs);
+    Vector<std::common_type_t<T,U>,n> operator+(const Vector<U,n>& rhs) const;
     template<typename U>
-    Vector& operator*=(U scalar);
-
-    bool operator==(const Vector& rhs) const;
+    Vector<std::common_type_t<T,U>,n> operator-(const Vector<U,n>& rhs) const;
+    template<typename U>
+    Vector<std::common_type_t<T,U>,n> operator*(const Vector<U,n>& rhs) const;
+    template<typename U>
+    Vector<std::common_type_t<T,U>,n> operator*(U scalar) const;
+    template<typename U>
+    Vector<T,n>& operator+=(const Vector<U,n>& rhs);
+    template<typename U>
+    Vector<T,n>& operator-=(const Vector<U,n>& rhs);
+    template<typename U>
+    Vector<T,n>& operator*=(U scalar);
+    template<typename U>
+    bool operator==(const Vector<U,n>& rhs) const;
 
      /**
      * @brief Returns a pointer to the contiguous vector storage.
@@ -101,16 +106,51 @@ public:
      * @throws std::runtime_error
      * Thrown if index >= size().
      */
-    T getIndex(size_t index);
+    T getIndex(size_t index) const;
 
-    void vectorAdd(const Vector& rhs);
-    void vectorSub(const Vector& rhs);
-    void hadamardProduct(const Vector& rhs);
-    void crossProduct(const Vector& rhs);
-    T dotProduct(const Vector& rhs);
-
+    /**
+     * @brief Adds two vectors inline
+     * 
+     * @param rhs Vector to be added
+     */
     template<typename U>
-    void vectorScale(U scalar);
+    void vectorAdd(const Vector<U,n>& rhs) noexcept;
+    /**
+     * @brief Subtracts two vectors inline
+     * 
+     * @param rhs Vector to be subtracted
+     */
+    template<typename U>
+    void vectorSub(const Vector<U,n>& rhs) noexcept;
+    /**
+     * @brief Computes the hadamard product inline
+     * 
+     * @param rhs Vector to be multiplied
+     */
+    template<typename U>
+    void hadamardProduct(const Vector<U,n>& rhs) noexcept;
+    /**
+     * @brief Computes the dot product of 2 vectors
+     * 
+     * @param rhs Vector to be multiplied
+     */
+    template<typename U>
+    const T dotProduct(const Vector<U,n>& rhs) noexcept;
+    /**
+     * @brief Scales the vector by a linear scalar
+     * 
+     * @param scalar Value to be scaled by
+     */
+    template<typename U>
+    void vectorScale(const U scalar) noexcept;
+
+    /**
+     * @brief Scales the vector by a linear scalar
+     * 
+     * @param scalar Value to be scaled by
+     */
+    template<typename U>
+    bool vectorEqual(const Vector<U,n>& rhs) const noexcept;
 private:
     T data_[n];
 };

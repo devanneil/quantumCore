@@ -58,17 +58,24 @@ class Matrix {
     const T& operator()(size_t row, size_t col) const;
     T& operator[](size_t index);
 
-    Matrix operator+(const Matrix& rhs) const;
-    Matrix operator-(const Matrix& rhs) const;
-    Matrix operator*(const Matrix& rhs) const;
+    template<typename U>
+    Matrix<std::common_type_t<T,U>, n, m> operator+(const Matrix<U,n,m>& rhs) const;
+    template<typename U>
+    Matrix<std::common_type_t<T,U>, n, m> operator-(const Matrix<U,n,m>& rhs) const;
+    template<typename U, size_t b>
+    Matrix<std::common_type_t<T,U>, n, b> operator*(const Matrix<U, m, b>& rhs) const;
     template<typename U>
     Matrix operator*(U scalar) const;
 
-    Matrix& operator+=(const Matrix& rhs);
+    template<typename U>
+    Matrix& operator+=(const Matrix<U,n,m>& rhs);
+    template<typename U>
+    Matrix& operator-=(const Matrix<U,n,m>& rhs);
     template<typename U>
     Matrix& operator*=(U scalar);
 
-    bool operator==(const Matrix& rhs) const;
+    template<typename U>
+    bool operator==(const Matrix<U,n,m>& rhs) const;
 
     /**
      * @brief Returns a pointer to the contiguous matrix storage.
@@ -125,7 +132,7 @@ class Matrix {
      * @throws std::runtime_error
      * Thrown if the requested element is outside the matrix.
      */
-    T getValue(size_t row, size_t col);
+    T getValue(size_t row, size_t col) const;
     /**
      * @brief Returns the value at the specified linear index.
      *
@@ -136,14 +143,39 @@ class Matrix {
      * @throws std::runtime_error
      * Thrown if index >= size().
      */
-    T getIndex(size_t index);
+    T getIndex(size_t index) const;
 
-    void matrixAdd(const Matrix& rhs);
-    void matrixSub(const Matrix& rhs);
-    void matrixMultiply(const Matrix& rhs);
+    /**
+     * @brief Performs element-wise addition of Matrix
+     * 
+     * @param rhs The matrix to add to this
+     */
+    template<typename U>
+    void matrixAdd(const Matrix<U,n,m>& rhs) noexcept;
+    /**
+     * @brief Performs element-wise subtraction of Matrix
+     * 
+     * @param rhs The matrix to subtract to this
+     */
+    template<typename U>
+    void matrixSub(const Matrix<U,n,m>& rhs) noexcept;
+    /**
+     * @brief Scales Matrix by linear scalar
+     * 
+     * @param scalar The scalar to apply
+     */
+    template<typename U>
+    void matrixScale(const U scalar) noexcept;
+    /**
+     * @brief Compares matrix values element-wise
+     * 
+     * @param rhs The matrix to compare
+     */
+    template<typename U>
+    bool matrixEqual(const Matrix<U,n,m>& rhs) const noexcept;
 
     template<typename U>
-    void matrixScale(U scalar);
+    void matrixMultiply(const Matrix<U,n,m>& rhs) noexcept;
 
     protected:
 
@@ -158,6 +190,9 @@ using Matrix3d = Matrix<double,3,3>;
 using Matrix4n = Matrix<int,4,4>;
 using Matrix3n = Matrix<int,3,3>;
 
+template<typename L, typename R, size_t Rows, size_t Inner, size_t Cols>
+Matrix<std::common_type_t<L, R>, Rows, Cols> multiplyMatrices(
+    const Matrix<L, Rows, Inner>& lhs, const Matrix<R, Inner, Cols>& rhs);
 }
 
 #include "Matrix.inl"
