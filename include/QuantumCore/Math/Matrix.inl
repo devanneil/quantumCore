@@ -4,7 +4,7 @@ namespace Quantum {
 template<typename T, size_t n, size_t m>
 Matrix<T, n, m>::Matrix() 
 {
-    std::fill(data_, data_ + n, T{});
+    std::fill(data_, data_ + n * m, T{});
 }
 template<typename T, size_t n, size_t m>
 Matrix<T, n, m>::Matrix(const std::initializer_list<T> values) 
@@ -120,19 +120,19 @@ template<typename T, size_t n, size_t m>
 template<typename U>
 void Matrix<T, n, m>::matrixAdd(const Matrix<U,n,m>& rhs) noexcept
 {
-    std::transform(begin(), end(), rhs.begin(), begin(), std::plus<int>());  
+    std::transform(begin(), end(), rhs.begin(), begin(), std::plus<T>());  
 }
 template<typename T, size_t n, size_t m>
 template<typename U>
 void Matrix<T, n, m>::matrixSub(const Matrix<U,n,m>& rhs) noexcept
 {
-    std::transform(begin(), end(), rhs.begin(), begin(), std::minus<int>());  
+    std::transform(begin(), end(), rhs.begin(), begin(), std::minus<T>());  
 }
 template<typename T, size_t n, size_t m>
 template<typename U>
 void Matrix<T, n, m>::matrixScale(const U scalar) noexcept
 {
-    std::transform(begin(), end(), begin(), [scalar](double val) { return static_cast<T>(val * scalar); });
+    std::transform(begin(), end(), begin(), [scalar](T val) { return static_cast<T>(val * scalar); });
 }
 
 template<typename T, size_t n, size_t m>

@@ -177,6 +177,9 @@ class Matrix {
     template<typename U>
     void matrixMultiply(const Matrix<U,n,m>& rhs) noexcept;
 
+    static constexpr size_t Rows = n;
+    static constexpr size_t Cols = m;
+    
     protected:
 
     private:
