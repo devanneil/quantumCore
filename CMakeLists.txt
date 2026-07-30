@@ -14,7 +14,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 add_subdirectory(src/QuantumBackend)
 add_subdirectory(src/QuantumCore)
-add_subdirectory(src/QuantumGraphics)
+add_subdirectory(src/QuantumRenderer)
 add_subdirectory(src/QuantumMath)
 add_subdirectory(src/QuantumWindow)
 
@@ -29,6 +29,7 @@ add_executable(tempExe main.cpp)
 
 target_link_libraries(tempExe
  Quantum::Math
+    Quantum::Window::GLFW
 )
 
 
