@@ -67,7 +67,7 @@ TEST(VectorOperatorOverloading, TestAll)
     Quantum::Vector<float,4> result = V1 + V2;
     result = V1 - V2;
     result = V1 * V2;
-    V1==V2;
+    [[maybe_unused]] bool tmp = V1==V2;
     result = V1 * 2.0;
     result += V1;
     result -= V1;

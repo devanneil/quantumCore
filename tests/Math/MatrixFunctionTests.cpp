@@ -56,7 +56,7 @@ TEST(MatrixOperatorOverloading, TestAll)
     Quantum::Matrix<float,2,2> result = M1 + M2;
     result = M1 - M2;
     result = M1 * M2;
-    M1==M2;
+    [[maybe_unused]] bool tmp = M1==M2;
     result = M1 * 2.0;
     result += M1;
     result -= M1;
