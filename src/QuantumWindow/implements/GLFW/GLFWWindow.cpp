@@ -48,6 +48,12 @@ public:
         return static_cast<uint32_t>(height);
     }
 
+    void present() const override
+    {
+        glfwMakeContextCurrent(window_);
+        glfwSwapBuffers(window_);
+    }
+
 private:
     GLFWwindow* window_;
 };

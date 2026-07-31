@@ -26,10 +26,13 @@ if(QUANTUM_BUILD_TESTS)
 endif()
 
 add_executable(tempExe main.cpp)
+set(OpenGL_GL_PREFERENCE LEGACY)
+find_package(OpenGL REQUIRED)
 
 target_link_libraries(tempExe
- Quantum::Math
+    Quantum::Math
     Quantum::Window::GLFW
+    OpenGL::GL
 )
 
 

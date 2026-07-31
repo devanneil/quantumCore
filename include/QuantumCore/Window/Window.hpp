@@ -23,6 +23,8 @@ public:
     virtual uint32_t width() const = 0;
     virtual uint32_t height() const = 0;
 
+    virtual void present() const = 0;
+
     static std::unique_ptr<Window> create(
         const WindowDescription& description
     );
