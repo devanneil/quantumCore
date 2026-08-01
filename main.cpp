@@ -2,6 +2,7 @@
 #include <QuantumCore/Math/Vector.hpp>
 #include <QuantumCore/Math/Utils.hpp>
 #include <QuantumCore/Window/Window.hpp>
+#include <QuantumCore/Scene/Camera.hpp>
 #include <iostream>
 
 #include <OpenGL/gl.h>
@@ -55,11 +56,17 @@ void endFrame()
 
 int main()
 {
+    Quantum::Matrix4<float> cameraTF{
+        1.0f, 0.0f, 0.0f, 0.0f,
+        0.0f, 1.0f, 0.0f, 0.0f,
+        0.0f, 0.0f, 1.0f, 0.0f,
+        0.0f, 0.0f, 0.0f, 1.0f
+    };
     auto window = Quantum::Window::create({
         .title = "Quantum Engine",
         .width = 1280,
         .height = 720
-    });
+    }, Quantum::createPinholeCamera(cameraTF, 45));
     if(!window) {
         return -1;
     }
@@ -68,23 +75,32 @@ int main()
         .title = "Quantum Engine 2",
         .width = 1280,
         .height = 720
-    });
+    }, Quantum::createPinholeCamera(cameraTF, 70));
 
-    while (!window->shouldClose())
+    auto& renderingTarget1 = window->getRenderTarget();
+    auto& renderingTarget2 = window2->getRenderTarget();
+    while (true)
     {
         window->pollEvents();
         window2->pollEvents();
 
-        beginFrame();
+        if (window->shouldClose() || window2->shouldClose()) break;
+
+        //renderer.beginFrame(renderingTarget1);
+        renderingTarget1.beginFrame();
         clear();
         drawTriangle();
         endFrame();
+        //renderer.endFrame(renderingTarget1);
+        renderingTarget1.endFrame();
         window->present();
 
+        renderingTarget2.beginFrame();
         beginFrame();
         clear();
         drawOtherTriangle();
         endFrame();
+        renderingTarget2.endFrame();
         window2->present();
     }
 }

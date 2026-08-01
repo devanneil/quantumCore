@@ -1,8 +1,9 @@
-#pragma once
+#ifndef QUANTUM_WINDOW
+#define QUANTUM_WINDOW
 
 #include <cstdint>
 #include <memory>
-
+#include <QuantumCore/Renderer/RenderTarget.hpp>
 namespace Quantum {
 
 struct WindowDescription
@@ -24,9 +25,15 @@ public:
     virtual uint32_t height() const = 0;
 
     virtual void present() const = 0;
+    virtual RenderTarget& getRenderTarget() const = 0;
+
+    virtual void updateTitle(char* title) = 0;
+    virtual void resize(uint32_t width, uint32_t height) = 0;
 
     static std::unique_ptr<Window> create(
-        const WindowDescription& description
+        const WindowDescription& description,
+        const Camera& camera
     );
 };
 }
+#endif

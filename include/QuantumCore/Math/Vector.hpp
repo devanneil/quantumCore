@@ -155,12 +155,13 @@ private:
     T data_[n];
 };
 
-using Vector3f = Vector<float,3>;
-using Vector4f = Vector<float,4>;
-using Vector3d = Vector<double,3>;
-using Vector4d = Vector<double,4>;
-using Vector3n = Vector<int,3>;
-using Vector4n = Vector<int,4>;
+template<typename T>
+using Vector4 = Vector<T,4>;
+template<typename T>
+using Vector3 = Vector<T,3>;
+template<typename T>
+using Vector2 = Vector<T,2>;
+
 
 }
 

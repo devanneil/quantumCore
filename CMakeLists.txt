@@ -32,6 +32,7 @@ find_package(OpenGL REQUIRED)
 target_link_libraries(tempExe
     Quantum::Math
     Quantum::Window::GLFW
+    Quantum::Scene::Camera
     OpenGL::GL
 )
 

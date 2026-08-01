@@ -186,12 +186,12 @@ class Matrix {
     T data_[n*m];
 };
 
-using Matrix4f = Matrix<float,4,4>;
-using Matrix3f = Matrix<float,3,3>;
-using Matrix4d = Matrix<double,4,4>;
-using Matrix3d = Matrix<double,3,3>;
-using Matrix4n = Matrix<int,4,4>;
-using Matrix3n = Matrix<int,3,3>;
+template<typename T>
+using Matrix4 = Matrix<T,4,4>;
+template<typename T>
+using Matrix3 = Matrix<T,3,3>;
+template<typename T>
+using Matrix2 = Matrix<T,2,2>;
 
 template<typename L, typename R, size_t Rows, size_t Inner, size_t Cols>
 Matrix<std::common_type_t<L, R>, Rows, Cols> multiplyMatrices(
