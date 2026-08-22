@@ -1,4 +1,4 @@
-#ifndef QUANTUM_WINDOW
+#pragma once
 #define QUANTUM_WINDOW
 
 #include <cstdint>
@@ -31,9 +31,7 @@ public:
     virtual void resize(uint32_t width, uint32_t height) = 0;
 
     static std::unique_ptr<Window> create(
-        const WindowDescription& description,
-        const Camera& camera
+        const WindowDescription& description
     );
 };
 }
-#endif

@@ -1,13 +1,16 @@
 #include <QuantumCore/Window/Window.hpp>
+#include <glad/gl.h>
 #include <GLFW/glfw3.h>
 #include "GLFWRenderTarget.cpp"
+#include <cstdio>
 namespace Quantum {
 
 class GLFWWindow final : public Window
 {
 public:
-    explicit GLFWWindow(const WindowDescription& description, const Camera& camera)
+    explicit GLFWWindow(const WindowDescription& description)
     {
+
         window_ = glfwCreateWindow(
             description.width,
             description.height,
@@ -15,9 +18,7 @@ public:
             nullptr,
             nullptr
         );
-
         render_target_ = std::make_unique<GLFWRenderTarget>(GLFWRenderTarget(
-            camera,
             description.width,
             description.height,
             window_
@@ -79,13 +80,30 @@ private:
 };
 
 std::unique_ptr<Window>
-Window::create(const WindowDescription& description, const Camera& camera)
+Window::create(const WindowDescription& description)
 {
     if (!glfwInit())
     {
         return nullptr;
     }
-    return std::make_unique<GLFWWindow>(description, camera);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE); // Required for Mac
+    #ifdef __APPLE__
+    glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE); // Required on macOS
+    #endif
+    std::unique_ptr<GLFWWindow> window = std::make_unique<GLFWWindow>(description);
+
+    ///TEMPORARY RENDERER INIT
+    window->getRenderTarget().beginFrame();
+    if (!gladLoadGL(
+        reinterpret_cast<GLADloadfunc>(glfwGetProcAddress)))
+    {
+    printf("Failed to initialize GLAD");
+    return nullptr;
+    }
+    
+    return window;
 }
 
 }

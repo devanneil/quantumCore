@@ -97,7 +97,7 @@ void Vector<T, n>::hadamardProduct(const Vector<U,n>& rhs) noexcept
 }
 template<typename T, size_t n>
 template<typename U>
-const T Vector<T, n>::dotProduct(const Vector<U,n>& rhs) noexcept
+T Vector<T, n>::dotProduct(const Vector<U,n>& rhs) const noexcept
 {
     T dot_product = std::transform_reduce(begin(), end(), rhs.begin(), 0.0);
     return dot_product;
@@ -194,7 +194,7 @@ template<typename T, size_t n>
 template<typename U>
 Vector<T,n>& Vector<T, n>::operator-=(const Vector<U,n>& rhs)
 {
-    this->vectorAdd(rhs);
+    this->vectorSub(rhs);
     return *this;
 }
 template<typename T, size_t n>
@@ -210,5 +210,48 @@ template<typename U>
 bool Vector<T, n>::operator==(const Vector<U,n>& rhs) const
 {
     return this->vectorEqual(rhs);
+}
+template<typename T, size_t n>
+double Vector<T, n>::magnitude() const noexcept
+{
+    return sqrt(std::transform_reduce(begin(), end(), begin(), 0.0));
+}
+template<typename T, size_t n>
+Vector<T, n> Vector<T, n>::normalize() const
+{
+    const double magnitude = this->magnitude();
+
+    if (magnitude == 0.0)
+        return Vector<T, n>{};
+
+    Vector<T, n> result(*this);
+
+    for (size_t i = 0; i < n; ++i)
+        result[i] = static_cast<T>(
+            static_cast<double>(result[i]) / magnitude
+        );
+
+    return result;
+}
+
+template<typename T, typename U>
+Vector3<std::common_type_t<T, U>>
+vectorCrossProduct(
+    const Vector3<T>& lhs,
+    const Vector3<U>& rhs
+) noexcept
+{
+    using R = std::common_type_t<T, U>;
+
+    return Vector3<R>{
+        static_cast<R>(lhs[1]) * static_cast<R>(rhs[2]) -
+        static_cast<R>(lhs[2]) * static_cast<R>(rhs[1]),
+
+        static_cast<R>(lhs[2]) * static_cast<R>(rhs[0]) -
+        static_cast<R>(lhs[0]) * static_cast<R>(rhs[2]),
+
+        static_cast<R>(lhs[0]) * static_cast<R>(rhs[1]) -
+        static_cast<R>(lhs[1]) * static_cast<R>(rhs[0])
+    };
 }
 };

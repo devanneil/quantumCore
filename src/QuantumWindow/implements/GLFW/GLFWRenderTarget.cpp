@@ -1,5 +1,4 @@
 #include <QuantumCore/Renderer/RenderTarget.hpp>
-#include <QuantumCore/Scene/Camera.hpp>
 #include <GLFW/glfw3.h>
 
 namespace Quantum {
@@ -7,9 +6,8 @@ namespace Quantum {
 class GLFWRenderTarget final : public RenderTarget
 {
     public:
-    GLFWRenderTarget(const Camera& camera, const size_t width, const size_t height, GLFWwindow* window_handle)
+    GLFWRenderTarget(const size_t width, const size_t height, GLFWwindow* window_handle)
     {
-        camera_ = camera;
         width_ = width;
         height_ = height;
         window_handle_ = window_handle;
@@ -40,15 +38,9 @@ class GLFWRenderTarget final : public RenderTarget
         height_ = height;
     }
 
-    Camera& getCamera()
-    {
-        return camera_;
-    }
-
     private:
     uint32_t width_;
     uint32_t height_;
-    Camera camera_;
     GLFWwindow* window_handle_;
 };
 

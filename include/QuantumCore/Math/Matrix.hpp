@@ -1,4 +1,4 @@
-#ifndef QUANTUM_MATRIX
+#pragma once
 #define QUANTUM_MATRIX
 #include <cstddef>
 #include <initializer_list>
@@ -199,5 +199,3 @@ Matrix<std::common_type_t<L, R>, Rows, Cols> multiplyMatrices(
 }
 
 #include "Matrix.inl"
-
-#endif

@@ -1,0 +1,24 @@
+#shader vertex
+#version 330 core
+layout (location = 0) in vec4 aPos;
+
+// Uniforms supplied by your C/C++ application for the camera and object placement
+uniform mat4 model;
+uniform mat4 view;
+uniform mat4 projection;
+
+void main()
+{
+    // Multiply order: Projection * View * Model * Position
+    gl_Position = projection * view * model * aPos;
+}
+
+#shader fragment
+#version 330 core
+
+layout(location = 0) out vec4 color;
+
+void main()
+{
+   color = vec4(0.0, 0.0, 1.0, 1.0);
+}

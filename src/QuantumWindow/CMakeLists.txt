@@ -22,4 +22,5 @@ target_link_libraries(
     QuantumWindowGLFW
     PUBLIC
         glfw
+        glad
 )

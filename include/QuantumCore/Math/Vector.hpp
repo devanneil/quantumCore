@@ -1,4 +1,4 @@
-#ifndef QUANTUM_VECTOR
+#pragma once
 #define QUANTUM_VECTOR
 #include <cstddef>
 #include <initializer_list>
@@ -6,7 +6,7 @@
 #include <utility>
 #include <type_traits>
 #include <format>
-
+#include <math.h>
 using std::size_t;
 namespace Quantum {
 template<typename T, size_t n>
@@ -135,7 +135,7 @@ public:
      * @param rhs Vector to be multiplied
      */
     template<typename U>
-    const T dotProduct(const Vector<U,n>& rhs) noexcept;
+    T dotProduct(const Vector<U,n>& rhs) const noexcept;
     /**
      * @brief Scales the vector by a linear scalar
      * 
@@ -151,6 +151,9 @@ public:
      */
     template<typename U>
     bool vectorEqual(const Vector<U,n>& rhs) const noexcept;
+
+    double magnitude() const noexcept;
+    Vector<T, n> normalize() const;
 private:
     T data_[n];
 };
@@ -162,9 +165,9 @@ using Vector3 = Vector<T,3>;
 template<typename T>
 using Vector2 = Vector<T,2>;
 
+template<typename T, typename U>
+Vector3<std::common_type_t<T, U>> vectorCrossProduct(const Vector3<T>& lhs, const Vector3<U>& rhs) noexcept;
 
 }
 
 #include "Vector.inl"
-
-#endif

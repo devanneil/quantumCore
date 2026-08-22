@@ -1,4 +1,4 @@
-#ifndef QUANTUM_SHADER
+#pragma once
 #define QUANTUM_SHADER
 
 namespace Quantum
@@ -7,7 +7,8 @@ class Shader
 {
 public:
     Shader() = default;
-    //char* compileString();
+private:
+    void* _handle;
 };
 
 inline Shader createPinholeShader(const float FoV)
@@ -18,4 +19,3 @@ inline Shader createPinholeShader(const float FoV)
 }
 
 }
-#endif
