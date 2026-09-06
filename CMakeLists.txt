@@ -25,8 +25,8 @@ if(QUANTUM_BUILD_TESTS)
     add_subdirectory(tests)
 endif()
 
-# add_library(glad glad/src/gl.c)
-# target_include_directories(glad PUBLIC glad/include)
+add_library(glad glad/src/gl.c)
+target_include_directories(glad PUBLIC glad/include)
 
 
 add_executable(tempExe main.cpp)
@@ -38,7 +38,6 @@ target_link_libraries(tempExe
     Quantum::Math
     Quantum::Window::GLFW
     Quantum::Scene::Camera
-    Quantum::GLBackend
     OpenGL::GL
     glad
     GLEW::GLEW
