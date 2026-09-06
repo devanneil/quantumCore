@@ -5,6 +5,7 @@
 #include <QuantumCore/Math/Utils.hpp>
 #include <QuantumCore/Window/Window.hpp>
 #include <QuantumCore/Scene/Camera.hpp>
+#include <QuantumCore/Renderer/Renderer.hpp>
 #include <iostream>
 #include <fstream>
 #include <sstream>

@@ -18,7 +18,6 @@ namespace Quantum
         std::shared_ptr<Shader> _currentShader;
 
         Renderer();
-        static std::unique_ptr<Renderer::RenderImpl> createImpl();
     public:
         ~Renderer();
 

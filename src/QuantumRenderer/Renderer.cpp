@@ -16,7 +16,7 @@ class Renderer::RenderImpl
 
 Renderer::Renderer() 
 {
-    _PImpl = createImpl();
+    _PImpl = {};
     _currentTarget = {};
     _currentShader = {};
 }
@@ -31,7 +31,7 @@ void Renderer::renderPrimitive(/*QuantumPrimitive prim*/) const
 
 }
 
-void Renderer::renderObject(/*QuantumObject mesh*/) const 
+void Renderer::renderObject(QuantumObject mesh) const 
 {
 
 }

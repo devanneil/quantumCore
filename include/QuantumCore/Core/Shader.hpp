@@ -13,7 +13,7 @@ private:
 
 inline Shader createPinholeShader(const float FoV)
 {   
-    printf("THIS IS A TEMPORARY FUNCTION: createPinholeShader\n");
+    //printf("THIS IS A TEMPORARY FUNCTION: createPinholeShader\n");
     Shader shader;
     return shader;
 }

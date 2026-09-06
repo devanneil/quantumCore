@@ -1,5 +1,5 @@
 #include <QuantumCore/Window/Window.hpp>
-#include <glad/gl.h>
+#define GLFW_INCLUDE_NONE
 #include <GLFW/glfw3.h>
 #include "GLFWRenderTarget.cpp"
 #include <cstdio>
@@ -90,18 +90,19 @@ Window::create(const WindowDescription& description)
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE); // Required for Mac
     #ifdef __APPLE__
-    glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE); // Required on macOS
+    //glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE); // Required on macOS
     #endif
     std::unique_ptr<GLFWWindow> window = std::make_unique<GLFWWindow>(description);
 
-    ///TEMPORARY RENDERER INIT
-    window->getRenderTarget().beginFrame();
-    if (!gladLoadGL(
-        reinterpret_cast<GLADloadfunc>(glfwGetProcAddress)))
-    {
-    printf("Failed to initialize GLAD");
-    return nullptr;
-    }
+    // //TEMPORARY RENDERER INIT
+    // window->getRenderTarget().beginFrame();
+    // if (!gladLoadGL(
+    //     reinterpret_cast<GLADloadfunc>(glfwGetProcAddress)))
+    // {
+
+    // printf("Failed to initialize GLAD");
+    // return nullptr;
+    // }
     
     return window;
 }
