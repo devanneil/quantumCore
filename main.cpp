@@ -263,7 +263,7 @@ int main()
         auto tfMat = Quantum::RotationMatrix<float>(currentAngle * 0.1, currentAngle * 0.5, currentAngle);
         for (int i = 0; i < Cube.size(); i++)
         {
-            cubeMesh.getVertex(i).set(POSITION_ATTR, Quantum::rightSideVectorMultiply<float>(tfMat, Cube[i]));
+            cubeMesh[i].set(POSITION_ATTR, Quantum::rightSideVectorMultiply<float>(tfMat, Cube[i]));
         }
         glUniformMatrix4fv(modelLoc, 1, GL_FALSE, modelMatrix.data());
         glUniformMatrix4fv(viewLoc, 1, GL_FALSE, cameraMatrix.data());

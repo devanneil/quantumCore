@@ -66,18 +66,21 @@ class Mesh
         }
 
         template<typename T>
-        T get(const VertexAttribute<T>& attribute) const
+        const T get(const VertexAttribute<T>& attribute) const
         {
             T ret;
             std::memcpy(&ret, this->data + attribute.offset, attribute.size);
             return ret;
         }
 
+        template<typename T>
+        const T operator[](const VertexAttribute<T>& attribute) const {return get(attribute);};
+
         private:
         std::byte* data;
     };
 
-    Mesh(std::initializer_list<VertexAttribute_t> attributes, int vertex_count)
+    Mesh(std::vector<VertexAttribute_t> attributes, int vertex_count)
     {
         size_t offset = 0;
         for (auto& attribute : attributes)
@@ -120,5 +123,7 @@ class Mesh
     {
         return this->attributes;
     }
+
+    Vertex operator[](size_t ind) {return getVertex(ind);};
 };
 }
