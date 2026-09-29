@@ -12,44 +12,113 @@
 namespace Quantum
 {
 
-constexpr size_t POSITION_SIZE = 3;
-constexpr size_t NORMAL_SIZE   = 3;
-constexpr size_t UV_SIZE       = 2;
-
-template<size_t N>
-using Attribute = std::vector<Vector<N, float>>;
+size_t alignUp(size_t offset, size_t alignment)
+{
+    return (offset + alignment - 1) / alignment * alignment;
+}
 
 class Mesh
 {
-private:
-    Attribute<POSITION_SIZE> _vertices;
+    private:
+    struct VertexAttribute_t {
+        int id;
+        size_t size;
+        size_t offset;
+        size_t alignment;
+        VertexAttribute_t() = default;
+    };
+    std::vector<VertexAttribute_t> attributes;
+    std::vector<std::byte> vertex_data;
+    size_t vertex_size;
+    size_t vertex_count;
 
-    std::optional<Attribute<NORMAL_SIZE>> _normals;
-    std::optional<Attribute<UV_SIZE>> _texture_coordinates;
+    public:
+    template<typename T>
+    struct VertexAttribute : VertexAttribute_t{
+        VertexAttribute(int id)
+        {
+            static_assert(std::is_trivially_copyable_v<T>);
+            this->id = id;
+            this->size = sizeof(T);
+            this->offset = 0;
+            this->alignment = alignof(T);
+        }
+    };
 
-    std::vector<uint32_t> _triangle_indices;
+    struct Vertex{
+        Vertex(std::byte* data)
+        {
+            this->data = data;
+        }
 
-    ResourceHandle& gpuResource;
+        template<typename T>
+        void set(const VertexAttribute<T>& attribute, const T& data)
+        {
+            std::memcpy(this->data + attribute.offset, &data, attribute.size);
+        }
 
-public:
-    Mesh() = default;
+        template<typename T>
+        T get(const VertexAttribute<T>& attribute)
+        {
+            T ret;
+            std::memcpy(&ret, this->data + attribute.offset, attribute.size);
+            return ret;
+        }
 
-    Mesh(
-        std::vector<Vector3<float>> vertices,
-        std::vector<uint32_t> triangle_indices
-    );
+        template<typename T>
+        T get(const VertexAttribute<T>& attribute) const
+        {
+            T ret;
+            std::memcpy(&ret, this->data + attribute.offset, attribute.size);
+            return ret;
+        }
 
-    ~Mesh();
+        private:
+        std::byte* data;
+    };
 
-    size_t vertexCount() const;
-    size_t indexCount() const;
-
-    size_t stride() const;
-
-    static constexpr std::array<size_t, 3> get_attrib_descriptor()
+    Mesh(std::initializer_list<VertexAttribute_t> attributes, int vertex_count)
     {
-        return {POSITION_SIZE, NORMAL_SIZE, UV_SIZE};
+        size_t offset = 0;
+        for (auto& attribute : attributes)
+            this->attributes.emplace_back(VertexAttribute_t(attribute));
+        for (auto& attribute : this->attributes)
+        {
+            offset = alignUp(offset, attribute.alignment);
+            
+            attribute.offset = offset;
+
+            offset += attribute.size;
+        }
+
+        this->vertex_size = offset;
+        this->vertex_count = vertex_count;
+
+        this->vertex_data.resize(this->vertex_size * vertex_count);
+    }
+
+    Vertex getVertex(size_t ind)
+    {
+        if(ind >= vertex_count)
+        {
+            throw std::out_of_range("Vertex index out of bounds!");
+        }
+        return Vertex(vertex_data.data() + ind * vertex_size);
+    }
+
+    const std::byte* getVertexData() const
+    {
+        return vertex_data.data();
+    }
+
+    size_t size()
+    {
+        return vertex_data.size() * sizeof(std::byte);
+    }
+
+    std::vector<VertexAttribute_t> getAttributeArray()
+    {
+        return this->attributes;
     }
 };
-
 }

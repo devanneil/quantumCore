@@ -5,6 +5,7 @@
 #include <QuantumCore/Math/Utils.hpp>
 #include <QuantumCore/Window/Window.hpp>
 #include <QuantumCore/Scene/Camera.hpp>
+#include <QuantumCore/Scene/Mesh.hpp>
 #include <iostream>
 #include <fstream>
 #include <sstream>
@@ -152,7 +153,7 @@ static unsigned int CreateShader(
     return program;
 }
 
-
+Quantum::Mesh::VertexAttribute<Quantum::Vector4<float>> POSITION_ATTR(0);
 
 int main()
 {
@@ -200,6 +201,11 @@ int main()
     5, 4, 0,
     0, 1, 5
     };
+    Quantum::Mesh cubeMesh = {{POSITION_ATTR}, (int)Cube.size()};
+    for(int i = 0; i < (int)Cube.size(); i++ ) {
+        cubeMesh.getVertex(i).set(POSITION_ATTR, Cube[i]);
+    }
+
     const float aspect = 1280.0f / 720.0f;
     auto cameraMatrix = Quantum::lookAtMatrix({10.0, 0.0, 0.0}, {0.0, 0.0, 0.0});
     auto perspectiveMatrix = Quantum::projectionMatrix(45.0 * M_PI / 180.0, aspect, 0.1, 100.0);
@@ -255,10 +261,9 @@ int main()
         currentAngle += radPerSeconds * dt;
 
         auto tfMat = Quantum::RotationMatrix<float>(currentAngle * 0.1, currentAngle * 0.5, currentAngle);
-        auto cubeInstance = Cube;
         for (int i = 0; i < Cube.size(); i++)
         {
-            cubeInstance[i] = Quantum::rightSideVectorMultiply<float>(tfMat, Cube[i]);
+            cubeMesh.getVertex(i).set(POSITION_ATTR, Quantum::rightSideVectorMultiply<float>(tfMat, Cube[i]));
         }
         glUniformMatrix4fv(modelLoc, 1, GL_FALSE, modelMatrix.data());
         glUniformMatrix4fv(viewLoc, 1, GL_FALSE, cameraMatrix.data());
@@ -273,8 +278,8 @@ int main()
         glBindVertexArray(vao);
         glBufferData(
             GL_ARRAY_BUFFER,
-            cubeInstance.size() * sizeof(Quantum::Vector4<float>),
-            cubeInstance.data()->data(),
+            cubeMesh.size(),
+            cubeMesh.getVertexData(),
             GL_STATIC_DRAW
         );
         glDrawElements(
